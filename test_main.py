@@ -9,7 +9,7 @@ def setup_functions():
 
 def test_post_compute():
     data = {
-        "batchid": "id0102a",
+        "batch_id": "id0102a",
         "payload": [[1,2], [3,4]]
     }
     response = client.post('/compute', json=data)
@@ -17,6 +17,6 @@ def test_post_compute():
     assert response.json["status"] == "complete"
 
 def test_get_result():
-    batchid = "id0102a"
-    response = client.post(f'/compute/{batchid}')
+    batch_id = "id0102a"
+    response = client.post(f'/compute/{batch_id}')
     assert response.status_code == 200
