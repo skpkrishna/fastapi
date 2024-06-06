@@ -6,10 +6,8 @@ from sqlalchemy.orm import Session
 from app.models.computemodel import *
 from app.schemas.computeschema import ComputeResponse, ComputeRequest, Response
 from app.controllers.computecontroller import create, get_result, get_results 
-from app.db.database import SessionLocal, engine
+from app.db.database import SessionLocal
 
-# get root logger
-logger = logging.getLogger(__name__)
 router = APIRouter()
 
 # Dependency

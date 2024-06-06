@@ -2,10 +2,9 @@ from sqlalchemy.orm import Session
 from app.helpers.computehelper import calculate
 from app.models.computemodel import Compute
 from app.schemas.computeschema import ComputeRequest, ComputeResponse, Response
-import datetime, logging
-
-# get root logger
-logger = logging.getLogger(__name__)
+import datetime
+from fastapi import HTTPException
+from app.helpers.logger import logger
 
 def create(db: Session, data: ComputeResponse):
     try:
@@ -42,7 +41,22 @@ def create(db: Session, data: ComputeResponse):
     }
 
 def get_result(db: Session, batch_id: int):
-    return db.query(Compute).filter(Compute.batch_id == batch_id).first()
+    result = None
+    try:
+        result = db.query(Compute).filter(Compute.batch_id == batch_id).first()
+        if result is not None:
+            raise HTTPException(status_code=404,detail="Batch ID not found")
+    except Exception as e:
+        result = {"message": "Batch ID not Found"}
+    return result
 
 def get_results(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Compute).offset(skip).limit(limit).all()
+    results = None
+    try:
+        results = db.query(Compute).offset(skip).limit(limit).all()
+        if results is not None:
+            raise HTTPException(status_code=404,detail="No Data found")
+    except Exception as e:
+        results = {"message": "No Data"}
+    return results
+    
