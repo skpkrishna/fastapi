@@ -55,7 +55,10 @@ json_formatter = JsonFormatter({"level": "levelname",
 
 stream_handler = logging.StreamHandler()
 stream_handler.setFormatter(json_formatter)
-
+log_dir = './logs/'
+import os
+if not os.path.isdir(log_dir):
+   os.makedirs(log_dir)
 json_handler = logging.FileHandler('./logs/app.log')
 json_handler.setFormatter(json_formatter)
 
