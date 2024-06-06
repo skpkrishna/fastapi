@@ -1,20 +1,22 @@
 from sqlalchemy.orm import Session
-from . import models, helper, schemas
+from app.helpers.computehelper import calculate
+from app.models.computemodel import Compute
+from app.schemas.computeschema import ComputeRequest, ComputeResponse, Response
 import datetime, logging
 
 # get root logger
 logger = logging.getLogger(__name__)
 
-def create(db: Session, data: schemas.ComputeResponse):
+def create(db: Session, data: ComputeResponse):
     try:
         start = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        output = helper.calculate(data.payload)
+        output = calculate(data.payload)
         end = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     except Exception as e:
         logger.error(f"Unable to Compute {str(e)}")
 
     try:
-        db_entry = models.Compute(
+        db_entry = Compute(
             batch_id=data.batch_id,
             input=str(data.payload),
             output=str(output)
@@ -40,7 +42,7 @@ def create(db: Session, data: schemas.ComputeResponse):
     }
 
 def get_result(db: Session, batch_id: int):
-    return db.query(models.Compute).filter(models.Compute.batch_id == batch_id).first()
+    return db.query(Compute).filter(Compute.batch_id == batch_id).first()
 
 def get_results(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Compute).offset(skip).limit(limit).all()
+    return db.query(Compute).offset(skip).limit(limit).all()

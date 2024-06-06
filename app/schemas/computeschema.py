@@ -17,3 +17,4 @@ class Response(BaseModel):
     input: str
     output: str
     started_at: datetime = None
+
